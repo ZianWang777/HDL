@@ -4,7 +4,7 @@ CHIP A5Q2201804836 {
 
     PARTS:
     Not(in=I, out=notI);
-    Or(a=D, b=I, out=X);
+    Or(a=D, b=notI, out=X);
     Not(in=T, out=notT);
     And(a=X, b=notT, out=R);
 }
