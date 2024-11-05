@@ -1,7 +1,8 @@
 CHIP A5Q1 {
-    IN A, B, X;
-    OUT out[4];
+    IN A, B;
+    OUT out;
 
     PARTS:
-    Xor(a=A, b=X, out=out[0]);
+    Not(in=B, out=notB);
+    And(a=A, b=notB, out=out);
 }
