@@ -1,0 +1,10 @@
+CHIP 201804836 {
+    IN D,I,T;
+    OUT R;
+
+    PARTS:
+    Not(in=I, out=notI);
+    Or(a=D, b=I, out=X);
+    Not(in=T, out=notT);
+    And(a=X, b=notT, out=R);
+}
