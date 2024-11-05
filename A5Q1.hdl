@@ -1,8 +1,8 @@
 CHIP A5Q1 {
     IN A, B;
-    OUT out;
+    OUT x;
 
     PARTS:
     Not(in=B, out=notB);
-    And(a=A, b=notB, out=out);
+    And(a=A, b=notB, out=x);
 }
