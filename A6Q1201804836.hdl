@@ -5,11 +5,13 @@ CHIP A6Q1201804836 {
     Xor(a=C,b=D,out=xcd);
     And(a=A,b=B,out=aab);
     And(a=aab,b=xcd,out=e1);
-    Not(in=aab,out=naab);
+    Or(a=A,b=B,out=oab);
+    Not(in=oab,out=naab);
     Not(in=xcd,out=nxcd);
     And(a=naab,b=nxcd,out=e2);
     And(a=B,b=D,out=bd);
-    Nand(a=A,b=C,out=nac);
+    Or(a=A,b=C,out=ac);
+    Not(in=ac,out=nac);
     And(a=bd,b=nac,out=e3);
     Or(a=e1,b=e2,out=ex1);
     Or(a=ex1,b=e3,out=X);
