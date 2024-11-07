@@ -1,0 +1,15 @@
+CHIP A6Q1201804836 {
+    IN A, B, C, D;
+    OUT X;
+    PARTS:
+    Xor(a=C,b=D,out=xcd);
+    And(a=A,b=B,out=aab);
+    Nor(a=A,b=B,out=oab);
+    And(a=aab,b=xcd,out=e1);
+    And(a=oab,b=xcd,out=e2);
+    And(a=B,b=D,out=bd);
+    Nor(a=A,b=C,out=nac);
+    And(a=bd,b=nac,out=e3);
+    Or(a=e1,b=e2,out=ex1);
+    Or(a=ex1,b=e3,out=X);
+}
