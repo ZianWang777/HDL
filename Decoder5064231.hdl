@@ -1,0 +1,335 @@
+CHIP Decoder5064231 {
+    IN A,B,C,D;
+    OUT a,b,c,d,e,f,g;
+    PARTS:
+    Not(in=A, out=notA);
+    Not(in=B, out=notB);
+    Not(in=C, out=notC);
+    Not(in=D, out=notD);
+//¬B^¬C^¬D
+    And(a=notB, b=notC, out=nBnC);
+    And(a=nBnC, b=notD, out=nBnCnD);
+//A^¬C^¬D
+    And(a=A, b=notC, out=AnC);
+    And(a=AnC, b=notD, out=AnCnD);
+//A^¬B^¬C
+    And(a=A, b=nBnC, out=AnBnC);
+//¬A^B^D
+    And(a=notA, b=B, out=nAB);
+    And(a=nAB, b=D, out=nABD);
+//B^C^D
+    And(a=B, b=C, out=BC);
+    And(a=BC, b=D, out=BCD);
+//¬A^C
+    And(a=notA, b=C, out=nAC);
+//C^¬D
+    And(a=C, b=notD, out=CnD);
+    Or(a=nBnCnD, b=AnCnD, out=x);
+
+    Or(a=AnBnC, b=nABD, out=y);
+
+    Or(a=BCD, b=nAC, out=z);
+
+    Or(a=x, b=y, out=w);
+
+    Or(a=w, b=z, out=v);
+
+    Or(a=v, b=CnD, out=a);
+
+
+
+
+    Not(in=A, out=notA1);
+
+    Not(in=B, out=notB1);
+
+    Not(in=C, out=notC1);
+
+    Not(in=D, out=notD1);
+
+
+    // : A * ~B
+
+    And(a=A, b=notB1, out=exp1);
+
+
+    //  C * ~D
+
+    And(a=C, b=notD1, out=exp2);
+
+
+    // ~D * B
+
+    And(a=notD1, b=B, out=exp3);
+
+
+    //  C * ~A * B
+
+    And(a=C, b=notA1, out=exp4a);
+
+    And(a=exp4a, b=B, out=exp4);
+
+
+    //  C * A * B
+
+    And(a=C, b=A, out=exp5a);
+
+    And(a=exp5a, b=B, out=exp5);
+
+
+    // OR (some of products SOP)
+
+    Or(a=exp1, b=exp2, out=exp6);
+
+    Or(a=exp6, b=exp3, out=exp7);
+
+    Or(a=exp7, b=exp4, out=exp8);
+
+    Or(a=exp8, b=exp5, out=b);
+
+
+
+
+
+
+
+
+
+
+
+
+    Not(in=A,out=na);
+
+    Not(in=B,out=nb);
+
+    Not(in=C,out=nc);
+
+    Not(in=D,out=nd);
+
+
+    And(a=na,b=nb,out=k1);
+
+
+    And(a=nc,b=nd,out=t1);
+
+    And(a=t1,b=na,out=k2);
+
+
+    And(a=A,b=nb,out=t2);
+
+    And(a=t2,b=nd,out=k3);
+
+
+    And(a=A,b=nc,out=t3);
+
+    And(a=t3,b=D,out=k4);
+
+
+    And(a=na,b=C,out=t4);
+
+    And(a=t4,b=D,out=k5);
+
+
+    Or(a=k1,b=k2,out=a1);
+
+    Or(a=k3,b=k4,out=a2);
+
+    Or(a=a2,b=k5,out=a3);
+
+    Or(a=a1,b=a3,out=c);
+
+
+    Not(in=A, out=notA2);
+
+    Not(in=B, out=notB2);
+
+    Not(in=C, out=notC2);
+
+    Not(in=D, out=notD2);
+
+
+    // Exp 1: ~C * ~D
+
+    And(a=notC2, b=notD2, out=exp11);
+
+
+    // Exp 2: ~C * D * B * ~A
+
+    And(a=notC2, b=D, out=exp2a);
+
+    And(a=exp2a, b=B, out=exp2b);
+
+    And(a=exp2b, b=notA2, out=exp21);
+
+
+    // Exp 3: A * ~B
+
+    And(a=A, b=notB2, out=exp31);
+
+
+    // Exp 4: A * B * C
+
+    And(a=A, b=B, out=exp4a1);
+
+    And(a=exp4a1, b=C, out=exp41);
+
+
+    // Exp 5: ~A * B * C * ~D
+
+    And(a=notA2, b=B, out=exp5a1);
+
+    And(a=exp5a1, b=C, out=exp5b);
+
+    And(a=exp5b, b=notD2, out=exp51);
+
+
+    // OR (some of products SOP)
+
+    Or(a=exp11, b=exp21, out=exp61);
+
+    Or(a=exp61, b=exp31, out=exp71);
+
+    Or(a=exp71, b=exp41, out=exp81);
+
+    Or(a=exp81, b=exp51, out=d);
+
+
+
+    Not(in=A, out=na1);
+
+    Not(in=B, out=nb1);
+
+    Not(in=C, out=nc1);
+
+    Not(in=D, out=nd1);
+
+
+    And(a=na1,b=nb1,out=t11);
+
+    And(a=t11,b=nd1,out=k11);
+
+
+    And(a=nc1,b=D,out=t21);
+
+    And(a=t21,b=B,out=k21);
+
+
+    And(a=C,b=nd1,out=t31);
+
+    And(a=t31,b=B,out=k31);
+
+
+    And(a=nc1,b=nd1,out=t41);
+
+    And(a=t41,b=A,out=k41);
+
+
+    And(a=C,b=D,out=t51);
+
+    And(a=t51,b=nb1,out=k51);
+
+
+    Or(a=k11,b=k21,out=a11);
+
+    Or(a=k31,b=k41,out=a21);
+
+    Or(a=a11,b=a21,out=a31);
+
+    Or(a=a31,b=k51,out=e);
+
+
+
+
+
+
+
+  Not(in=A, out=nota);
+
+  Not(in=B, out=notb);
+
+  Not(in=C, out=notc);
+
+  Not(in=D, out=notd);
+
+
+  // AB + C¬D + A¬BC + A¬C¬D + A¬B¬C¬D
+
+
+  // AB
+
+  And(a=A, b=B, out=ab);
+
+
+  // C¬D
+
+  And(a=C, b=notd, out=cnotd);
+
+
+  // A¬BC
+
+  And(a=A, b=notb, out=anotb);
+
+  And(a=anotb, b=C, out=anotbc);
+
+
+  // A¬C¬D
+
+  And(a=A, b=notc, out=anotc);
+
+  And(a=anotc, b=notd, out=anotcnotd);
+
+
+  // A¬B¬C¬D
+
+  And(a=notc, b=notd, out=notcnotd);
+
+  And(a=anotb, b=notcnotd, out=long);
+
+
+  Or(a=ab, b=cnotd, out=part1);
+
+  Or(a=anotbc, b=anotcnotd, out=part2);
+
+  Or(a=part1, b=part2, out=part3);
+
+  Or(a=part3, b=long, out=f);
+
+
+
+    Not(in=A, out=nA);
+
+    Not(in=B, out=nB);
+
+    Not(in=C, out=nC);
+
+    Not(in=D, out=nD);
+
+    // B'C'
+
+    And(a=nB, b=nC, out=t12);
+
+    // B'D
+
+    And(a=nB, b=D, out=t22);
+
+    // C'D
+
+    And(a=nC, b=D, out=t32);
+
+    // A'B
+
+    And(a=nA, b=B, out=t42);
+
+    // AB'
+
+    And(a=A, b=nB, out=t52);
+
+    Or(a=t12, b=t22, out=o1);
+
+    Or(a=o1, b=t32, out=o2);
+
+    Or(a=o2, b=t42, out=o3);
+
+    Or(a=o3, b=t52, out=g);
+
+}
