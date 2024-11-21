@@ -1,29 +1,61 @@
 CHIP Decoder201804836 {
-    IN A,B,C,D;
-    OUT a,b,c,d,e,f,g;
+
+    IN A, B, C, D;
+
+    OUT a;
     PARTS:
     Not(in=A, out=notA);
+
     Not(in=B, out=notB);
+
     Not(in=C, out=notC);
+
     Not(in=D, out=notD);
+
+
 //¬B^¬C^¬D
+
     And(a=notB, b=notC, out=nBnC);
+
     And(a=nBnC, b=notD, out=nBnCnD);
+
+
 //A^¬C^¬D
+
     And(a=A, b=notC, out=AnC);
+
     And(a=AnC, b=notD, out=AnCnD);
+
+
 //A^¬B^¬C
+
     And(a=A, b=nBnC, out=AnBnC);
+
+
 //¬A^B^D
+
     And(a=notA, b=B, out=nAB);
+
     And(a=nAB, b=D, out=nABD);
+
+
 //B^C^D
+
     And(a=B, b=C, out=BC);
+
     And(a=BC, b=D, out=BCD);
+
+
 //¬A^C
+
     And(a=notA, b=C, out=nAC);
+
+
 //C^¬D
+
     And(a=C, b=notD, out=CnD);
+
+
     Or(a=nBnCnD, b=AnCnD, out=x);
 
     Or(a=AnBnC, b=nABD, out=y);
@@ -37,35 +69,24 @@ CHIP Decoder201804836 {
     Or(a=v, b=CnD, out=a);
 
 
-
-
-    Not(in=A, out=notA1);
-
-    Not(in=B, out=notB1);
-
-    Not(in=C, out=notC1);
-
-    Not(in=D, out=notD1);
-
-
     // : A * ~B
 
-    And(a=A, b=notB1, out=exp1);
+    And(a=A, b=notB, out=exp1);
 
 
     //  C * ~D
 
-    And(a=C, b=notD1, out=exp2);
+    And(a=C, b=notD, out=exp2);
 
 
     // ~D * B
 
-    And(a=notD1, b=B, out=exp3);
+    And(a=notD, b=B, out=exp3);
 
 
     //  C * ~A * B
 
-    And(a=C, b=notA1, out=exp4a);
+    And(a=C, b=notA, out=exp4a);
 
     And(a=exp4a, b=B, out=exp4);
 
@@ -86,17 +107,6 @@ CHIP Decoder201804836 {
     Or(a=exp7, b=exp4, out=exp8);
 
     Or(a=exp8, b=exp5, out=b);
-
-
-
-
-
-
-
-
-
-
-
 
     Not(in=A,out=na);
 
@@ -138,33 +148,23 @@ CHIP Decoder201804836 {
 
     Or(a=a1,b=a3,out=c);
 
-
-    Not(in=A, out=notA2);
-
-    Not(in=B, out=notB2);
-
-    Not(in=C, out=notC2);
-
-    Not(in=D, out=notD2);
-
-
     // Exp 1: ~C * ~D
 
-    And(a=notC2, b=notD2, out=exp11);
+    And(a=notC, b=notD, out=exp11);
 
 
     // Exp 2: ~C * D * B * ~A
 
-    And(a=notC2, b=D, out=exp2a);
+    And(a=notC, b=D, out=exp2a);
 
     And(a=exp2a, b=B, out=exp2b);
 
-    And(a=exp2b, b=notA2, out=exp21);
+    And(a=exp2b, b=notA, out=exp21);
 
 
     // Exp 3: A * ~B
 
-    And(a=A, b=notB2, out=exp31);
+    And(a=A, b=notB, out=exp31);
 
 
     // Exp 4: A * B * C
@@ -176,11 +176,11 @@ CHIP Decoder201804836 {
 
     // Exp 5: ~A * B * C * ~D
 
-    And(a=notA2, b=B, out=exp5a1);
+    And(a=notA, b=B, out=exp5a1);
 
-    And(a=exp5a1, b=C, out=exp5b);
+    And(a=exp5a1, b=C, out=exp5b1);
 
-    And(a=exp5b, b=notD2, out=exp51);
+    And(a=exp5b1, b=notD, out=exp51);
 
 
     // OR (some of products SOP)
@@ -195,38 +195,30 @@ CHIP Decoder201804836 {
 
 
 
-    Not(in=A, out=na1);
 
-    Not(in=B, out=nb1);
+    And(a=na,b=nb,out=t11);
 
-    Not(in=C, out=nc1);
-
-    Not(in=D, out=nd1);
+    And(a=t11,b=nd,out=k11);
 
 
-    And(a=na1,b=nb1,out=t11);
-
-    And(a=t11,b=nd1,out=k11);
-
-
-    And(a=nc1,b=D,out=t21);
+    And(a=nc,b=D,out=t21);
 
     And(a=t21,b=B,out=k21);
 
 
-    And(a=C,b=nd1,out=t31);
+    And(a=C,b=nd,out=t31);
 
     And(a=t31,b=B,out=k31);
 
 
-    And(a=nc1,b=nd1,out=t41);
+    And(a=nc,b=nd,out=t41);
 
     And(a=t41,b=A,out=k41);
 
 
     And(a=C,b=D,out=t51);
 
-    And(a=t51,b=nb1,out=k51);
+    And(a=t51,b=nb,out=k51);
 
 
     Or(a=k11,b=k21,out=a11);
@@ -235,12 +227,7 @@ CHIP Decoder201804836 {
 
     Or(a=a11,b=a21,out=a31);
 
-    Or(a=a31,b=k51,out=e);
-
-
-
-
-
+    Or(a=a31,b=k5,out=e);
 
 
   Not(in=A, out=nota);
@@ -333,3 +320,5 @@ CHIP Decoder201804836 {
     Or(a=o3, b=t52, out=g);
 
 }
+
+
