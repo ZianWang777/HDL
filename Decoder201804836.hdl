@@ -127,6 +127,10 @@ CHIP Decoder201804836 {
     And(a=notA,b=notB,out=et1);
     And(a=et1,b=notD,out=ek1);
 
+    //A^¬B^¬C
+    And(a=A,b=notB,out=et6);
+    And(a=et6,b=notC,out=ek6);
+
     //B^¬C^D
     And(a=notC,b=D,out=et2);
     And(a=et2,b=B,out=ek2);
@@ -146,7 +150,8 @@ CHIP Decoder201804836 {
     Or(a=ek1,b=ek2,out=ea1);
     Or(a=ek3,b=ek4,out=ea2);
     Or(a=ea1,b=ea2,out=ea3);
-    Or(a=ea3,b=ek5,out=e);
+    Or(a=ea3,b=ek5,out=ea4);
+    Or(a=ea4,b=ek6,out=e);
 
 //part f
 
