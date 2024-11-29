@@ -1,0 +1,202 @@
+CHIP DisplayCounter201804836 {
+    IN inc, reset;
+    OUT a,b,c,d,e,f,g;
+
+    PARTS:
+
+//not gates
+    Not(in=A, out=notA);
+    Not(in=B, out=notB);
+    Not(in=C, out=notC);
+    Not(in=D, out=notD);
+
+//part a
+
+    //¬B^¬C^¬D
+    And(a=notB, b=notC, out=nBnC);
+    And(a=nBnC, b=notD, out=nBnCnD);
+
+    //A^¬C^¬D
+    And(a=A, b=notC, out=AnC);
+    And(a=AnC, b=notD, out=AnCnD);
+
+    //A^¬B^¬C
+    And(a=A, b=nBnC, out=AnBnC);
+
+    //¬A^B^D
+    And(a=notA, b=B, out=nAB);
+    And(a=nAB, b=D, out=nABD);
+
+    //B^C^D
+    And(a=B, b=C, out=BC);
+    And(a=BC, b=D, out=BCD);
+
+    //¬A^C
+    And(a=notA, b=C, out=nAC);
+
+    //C^¬D
+    And(a=C, b=notD, out=CnD);
+
+    Or(a=nBnCnD, b=AnCnD, out=x);
+    Or(a=AnBnC, b=nABD, out=y);
+    Or(a=BCD, b=nAC, out=z);
+    Or(a=x, b=y, out=w);
+    Or(a=w, b=z, out=v);
+    Or(a=v, b=CnD, out=a);
+
+//part b
+
+    //A^¬B
+    And(a=A, b=notB, out=b1);
+
+    //¬A^¬B^¬C
+    And(a=notA, b=notB, out=b3a);
+    And(a=b3a, b=C, out=b3);
+
+    //¬A^B^¬C
+    And(a=notC, b=notA, out=b4a);
+    And(a=b4a, b=B, out=b4);
+
+    //A^B^D
+    And(a=D, b=A, out=b5a);
+    And(a=b5a, b=B, out=b5);
+
+    // OR 
+    Or(a=b1, b=CnD, out=b6);
+    Or(a=b6, b=b3, out=b7);
+    Or(a=b7, b=b4, out=b8);
+    Or(a=b8, b=b5, out=b);
+
+//part c
+
+    //¬A^¬B
+    And(a=notA,b=notB,out=c1);
+
+    //¬A^¬C^¬D
+    And(a=notC,b=notD,out=c2a);
+    And(a=c2a,b=notA,out=c2);
+
+    //A^¬B^¬D
+    And(a=A,b=notB,out=c3a);
+    And(a=c3a,b=notD,out=c3);
+
+    //A^¬C^D
+    And(a=A,b=notC,out=c4a);
+    And(a=c4a,b=D,out=c4);
+
+    //¬A^C^D 
+    And(a=notA,b=C,out=c5a);
+    And(a=c5a,b=D,out=c5);
+
+    Or(a=c1,b=c2,out=ca1);
+    Or(a=c3,b=c4,out=ca2);
+    Or(a=ca2,b=c5,out=ca3);
+    Or(a=ca1,b=ca3,out=c);
+
+//part d
+
+    //¬C^¬D
+    And(a=notC, b=notD, out=nCnD);
+
+    //¬A^B^¬C^D
+    And(a=notC, b=D, out=d2a);
+    And(a=d2a, b=B, out=d2b);
+    And(a=d2b, b=notA, out=d2);
+
+    //A^¬B
+    And(a=A, b=notB, out=d3);
+
+    //A^B^C
+    And(a=A, b=B, out=d4a);
+    And(a=d4a, b=C, out=d4);
+
+    //¬A^B^C^¬D
+    And(a=notA, b=B, out=d5a);
+    And(a=d5a, b=C, out=d5b);
+    And(a=d5b, b=notD, out=d5);
+
+    // OR (some of products SOP)
+    Or(a=nCnD, b=d2, out=d6);
+    Or(a=d6, b=d3, out=d7);
+    Or(a=d7, b=d4, out=d8);
+    Or(a=d8, b=d5, out=d);
+
+//part e
+
+    //¬A^¬B^¬D
+    And(a=notA,b=notB,out=et1);
+    And(a=et1,b=notD,out=ek1);
+
+    //A^¬B^¬C
+    And(a=A,b=notB,out=et6);
+    And(a=et6,b=notC,out=ek6);
+
+    //B^¬C^D
+    And(a=notC,b=D,out=et2);
+    And(a=et2,b=B,out=ek2);
+
+    //B^C^¬D
+    And(a=C,b=notD,out=et3);
+    And(a=et3,b=B,out=ek3);
+
+    //A^¬C^¬D
+    And(a=notC,b=notD,out=et4);
+    And(a=et4,b=A,out=ek4);
+
+    //¬B^C^D
+    And(a=C,b=D,out=et5);
+    And(a=et5,b=notB,out=ek5);
+
+    Or(a=ek1,b=ek2,out=ea1);
+    Or(a=ek3,b=ek4,out=ea2);
+    Or(a=ea1,b=ea2,out=ea3);
+    Or(a=ea3,b=ek5,out=ea4);
+    Or(a=ea4,b=ek6,out=e);
+
+//part f
+
+  //(¬A^¬B^¬C)v(C^¬D)v(A^B)v(A^C)v(A^¬D)
+
+  //A^B
+  And(a=A, b=B, out=AB);
+
+  //C^¬D
+  And(a=C, b=notD, out=cnd);
+
+  //A^C
+  And(a=A, b=C, out=AC);
+
+  //¬B^¬D
+  And(a=notB, b=notD, out=nBnD);
+
+  Or(a=AB, b=cnd, out=part1);
+  Or(a=AC, b=nBnD, out=part2);
+  Or(a=part1, b=part2, out=f);
+
+//part g
+
+    //¬B^¬C
+    And(a=notB, b=notC, out=t1);
+
+    //¬B^D
+    And(a=notB, b=D, out=t2);
+
+    //¬C^D
+    And(a=notC, b=D, out=t3);
+
+    //¬A^B
+    And(a=notA, b=B, out=t4);
+
+    //A^¬B
+    And(a=A, b=notB, out=t5);
+
+    Or(a=t1, b=t2, out=o1);
+    Or(a=o1, b=t3, out=o2);
+    Or(a=o2, b=t4, out=o3);
+    Or(a=o3, b=t5, out=g);
+
+    Mux16(a=rv,b=iv,sel=inc,out=fvi);
+    Mux16(a=fvi,b=false,sel=reset,out=rtv);
+    Register(in=rtv,load=true,out[0]=D,out[1]=C,out[2]=B,out[3]=A,out=rv);
+    Inc16(in=rv,out=iv);
+}
