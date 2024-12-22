@@ -4,7 +4,10 @@ CHIP P2S {
 
     PARTS:
 
-    Register(in=indata, load=load, out=data_out);
+    Register(in=indata[0], load=load, out=data_out[0]);
+    Register(in=indata[1], load=load, out=data_out[1]);
+    Register(in=indata[2], load=load, out=data_out[2]);
+    Register(in=indata[3], load=load, out=data_out[3]);
 
     Counter(increment=enable, reset=load, out=bit_index);
 
