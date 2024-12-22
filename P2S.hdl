@@ -12,7 +12,7 @@ CHIP P2S {
     Counter(increment=enable, reset=load, out=bit_index);
 
     Mux4Way16(a=data_out[0], b=data_out[1], c=data_out[2], d=data_out[4])
-    Register(in=indata0.4}
+    Register(in=indata0.4)
 
 }
 
