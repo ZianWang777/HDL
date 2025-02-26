@@ -1,42 +1,17 @@
-// CHIP P2S {
-//   IN indata[4], enable, load;
-//   OUT sout, complete;
-// 
-//   PARTS:
-// 
-//   // --- Shift Register Logic ---
-//   // For each bit, select between loading new data and shifting.
-//   // Bit0: next0 = load ? indata[0] : (enable ? data[1] : data[0])
-//   Mux(a=data[1], b=data[0], sel=enable, out=shift0);
-//   Mux(a=indata[0], b=shift0, sel=load, out=next0);
-// 
-//   // Bit1: next1 = load ? indata[1] : (enable ? data[2] : data[1])
-//   Mux(a=data[2], b=data[1], sel=enable, out=shift1);
-//   Mux(a=indata[1], b=shift1, sel=load, out=next1);
-// 
-//   // Bit2: next2 = load ? indata[2] : (enable ? data[3] : data[2])
-//   Mux(a=data[3], b=data[2], sel=enable, out=shift2);
-//   Mux(a=indata[2], b=shift2, sel=load, out=next2);
-// 
-//   // Bit3: next3 = load ? indata[3] : (enable ? false : data[3])
-//   Mux(a=false, b=data[3], sel=enable, out=shift3);
-//   Mux(a=indata[3], b=shift3, sel=load, out=next3);
-// 
-//   // Update the 4-bit register (shift register).
-//   // (Assume that the register loads its input every clock cycle. In our design, the Mux logic selects the proper next state.)
-//   Register(in={next3, next2, next1, next0}, load=true, out=data);
-// 
-//   // --- Shift Counter ---
-//   // This counter increments each time enable is asserted and resets to 0 when load is 1.
-//   // It counts 0,1,2,3, and when it reaches 4 we know that 4 bits have been shifted out.
-//   Counter3(inc=enable, reset=load, out=count);
-// 
-//   // --- Complete Signal ---
-//   // When the counter equals 4, the comparator outputs a 1 (for one clock cycle).
-//   EQ3(in=count, constant=4, out=complete);
-// 
-//   // --- Serial Output ---
-//   // The serial output is simply the least–significant bit of the shift register.
-//   // (Assume we “wire” data[0] to sout.)
-//   Wire(in=data[0], out=sout);
-// }
+CHIP P2S {
+  IN indata[4], enable, load;
+  OUT sout, complete;
+  PARTS:
+  Mux(a=data[1], b=data[0], sel=enable, out=shift0);
+  Mux(a=indata[0], b=shift0, sel=load, out=next0);
+  Mux(a=data[2], b=data[1], sel=enable, out=shift1);
+  Mux(a=indata[1], b=shift1, sel=load, out=next1);
+  Mux(a=data[3], b=data[2], sel=enable, out=shift2);
+  Mux(a=indata[2], b=shift2, sel=load, out=next2);
+  Mux(a=false, b=data[3], sel=enable, out=shift3);
+  Mux(a=indata[3], b=shift3, sel=load, out=next3);
+  Register(in={next3, next2, next1, next0}, load=true, out=data);
+  Counter3(inc=enable, reset=load, out=count);
+  EQ3(in=count, constant=4, out=complete);
+  Wire(in=data[0], out=sout);
+}
