@@ -1,19 +1,21 @@
 CHIP P2S {
     IN indata[4], enable, load;
     OUT sout, complete;
-
+    
     PARTS:
-
-    Register(in=indata[0], load=load, out=data_out[0]);
-    Register(in=indata[1], load=load, out=data_out[1]);
-    Register(in=indata[2], load=load, out=data_out[2]);
-    Register(in=indata[3], load=load, out=data_out[3]);
-
-    Counter(increment=enable, reset=load, out=bit_index);
-
-    Mux4Way16(a=data_out[0], b=data_out[1], c=data_out[2], d=data_out[4])
-    Register(in=indata0.4)
-
+    
+    // 4-bit register to store input data
+    Register(out=reg_out[4], in=indata, load=load, clock=clock);
+    
+    // 2-bit counter to track bit position
+    Counter(out=counter[2], in=0, enable=enable, clock=clock, reset=reset);
+    
+    // Multiplexer to select the correct bit
+    Mux4Way16(out=selected_bit, a=reg_out, b=reg_out, c=reg_out, d=reg_out, sel=counter);
+    
+    // Extract the least significant bit
+    And(a=selected_bit[0], b=1, out=sout);
+    
+    // Detect when transmission is complete
+    Eq(a=counter, b=3, out=complete);
 }
-
-
