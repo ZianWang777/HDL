@@ -1,17 +1,35 @@
 CHIP P2S {
-  IN indata[4], enable, load;
-  OUT sout, complete;
-  PARTS:
-  Mux(a=data[1], b=data[0], sel=enable, out=shift0);
-  Mux(a=indata[0], b=shift0, sel=load, out=next0);
-  Mux(a=data[2], b=data[1], sel=enable, out=shift1);
-  Mux(a=indata[1], b=shift1, sel=load, out=next1);
-  Mux(a=data[3], b=data[2], sel=enable, out=shift2);
-  Mux(a=indata[2], b=shift2, sel=load, out=next2);
-  Mux(a=false, b=data[3], sel=enable, out=shift3);
-  Mux(a=indata[3], b=shift3, sel=load, out=next3);
-  Register(in={next3, next2, next1, next0}, load=true, out=data);
-  Counter3(inc=enable, reset=load, out=count);
-  EQ3(in=count, constant=4, out=complete);
-  Wire(in=data[0], out=sout);
+    IN indata[4], enable, load;
+    OUT sout, complete;
+
+    PARTS:
+
+    Bit(in=indata[0], load=load, out=d0);
+    Bit(in=indata[1], load=load, out=d1);
+    Bit(in=indata[2], load=load, out=d2);
+    Bit(in=indata[3], load=load, out=d3);
+    Bit(in=nextS, load=true, out=currS);
+    Bit(in=nextB0, load=true, out=b0);
+    Bit(in=nextB1, load=true, out=b1);
+    And(a=b0, b=b1, out=lastB);
+    And(a=lastB, b=currS, out=done);
+    Bit(in=done, load=true, out=prevDone);
+    Not(in=prevDone, out=nPrevDone);
+    And(a=done, b=nPrevDone, out=complete);
+    Not(in=currS, out=nCurrS);
+    And(a=enable, b=nCurrS, out=start);
+    Not(in=done, out=nDone);
+    And(a=currS, b=nDone, out=cont);
+    Or(a=start, b=cont, out=nextS);
+    Xor(a=b0, b=currS, out=incB0);
+    And(a=b0, b=currS, out=carryB0);
+    Xor(a=b1, b=carryB0, out=incB1);
+    Mux(a=b0, b=incB0, sel=currS, out=bNext0);
+    Mux(a=bNext0, b=false, sel=start, out=nextB0);
+    Mux(a=b1, b=incB1, sel=currS, out=bNext1);
+    Mux(a=bNext1, b=false, sel=start, out=nextB1);
+    Mux(a=d0, b=d1, sel=b0, out=muxL1_0);
+    Mux(a=d2, b=d3, sel=b0, out=muxL1_1);
+    Mux(a=muxL1_0, b=muxL1_1, sel=b1, out=selBit);
+    And(a=selBit, b=currS, out=sout);
 }
